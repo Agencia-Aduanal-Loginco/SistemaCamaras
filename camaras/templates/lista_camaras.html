@@ -1,0 +1,26 @@
+<h2>Lista de Cámaras</h2>
+
+<a href="/camaras/registrar/">Registrar nueva cámara</a>
+
+<table border="1">
+<tr>
+<th>Empresa</th>
+<th>Nombre</th>
+<th>Modelo</th>
+<th>Serie</th>
+<th>IP</th>
+<th>MAC</th>
+</tr>
+
+{% for camara in camaras %}
+<tr>
+<td>{{ camara.empresa }}</td>
+<td>{{ camara.nombre }}</td>
+<td>{{ camara.modelo }}</td>
+<td>{{ camara.serie }}</td>
+<td>{{ camara.ip }}</td>
+<td>{{ camara.mac }}</td>
+</tr>
+{% endfor %}
+
+</table>
