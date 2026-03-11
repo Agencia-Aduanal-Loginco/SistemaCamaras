@@ -1,6 +1,6 @@
 # SistemaCamaras
 
-Sistema de control de asistencia mediante reconocimiento facial, desarrollado con Django 6.0.
+Sistema de control de mantenimientos de camaras de seguridad, desarrollado con Django 6.0.
 
 ## Tecnologías
 
