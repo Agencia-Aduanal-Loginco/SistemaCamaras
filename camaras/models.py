@@ -31,4 +31,4 @@ class Camara(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.nombre
+        return self.empresa + ' - ' + self.nombre + ' - ' + self.modelo + ' - ' + self.serie 
