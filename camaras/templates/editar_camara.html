@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Registrar Cámara{% endblock %}
+{% block title %}Editar — {{ camara.nombre }}{% endblock %}
 
 {% block content %}
 <div class="max-w-lg mx-auto bg-white p-8 shadow rounded-lg">
-  <h2 class="text-xl font-bold text-gray-800 mb-6">Registrar Nueva Cámara</h2>
+  <h2 class="text-xl font-bold text-gray-800 mb-6">Editar Cámara: {{ camara.nombre }}</h2>
 
-  <form method="post">
+  <form method="post" action="{% url 'editar_camara' camara.pk %}">
     {% csrf_token %}
 
     {% for field in form %}
@@ -30,7 +30,7 @@
     <div class="flex items-center gap-4 mt-6">
       <button type="submit"
               class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-        Guardar
+        Actualizar
       </button>
       <a href="{% url 'lista_camaras' %}" class="text-gray-500 hover:underline text-sm">
         Cancelar
