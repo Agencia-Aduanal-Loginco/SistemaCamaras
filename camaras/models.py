@@ -1,4 +1,14 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+# Modelo para la tabla de camaras
+# empresa: nombre de la empresa a la que pertenece la camara
+# nombre: nombre de la camara
+# modelo: modelo de la camara
+# serie: numero de serie de la camara
+# ip: direccion ip de la camara
+# mac: direccion mac de la camara
+
 
 class Camara(models.Model):
     empresa = models.CharField(max_length=100)
@@ -7,6 +17,14 @@ class Camara(models.Model):
     serie = models.CharField(max_length=100)
     ip = models.GenericIPAddressField()
     mac = models.CharField(max_length=17)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _('Camara')
+        verbose_name_plural = _('Camaras')
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.nombre

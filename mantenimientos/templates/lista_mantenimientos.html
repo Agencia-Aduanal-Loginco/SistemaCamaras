@@ -1,42 +1,56 @@
 {% extends "base.html" %}
 
-{% block title %}Lista de Cámaras{% endblock %}
+{% block title %}Mantenimientos{% endblock %}
 
 {% block content %}
 <div class="flex justify-between items-center mb-6">
-  <h1 class="text-2xl font-bold text-gray-800">Cámaras de Seguridad</h1>
-  <a href="{% url 'registrar_camara' %}"
+  <h1 class="text-2xl font-bold text-gray-800">Mantenimientos</h1>
+  <a href="{% url 'registrar_mantenimiento' %}"
      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
-    + Registrar nueva cámara
+    + Registrar mantenimiento
   </a>
 </div>
 
-{% if camaras %}
+{% if mantenimientos %}
 <div class="overflow-x-auto">
   <table class="w-full bg-white shadow rounded-lg overflow-hidden">
     <thead class="bg-gray-700 text-white">
       <tr>
         <th class="px-4 py-3 text-left text-sm font-semibold">Empresa</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold">Nombre</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold">Modelo</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold">Cámara</th>
         <th class="px-4 py-3 text-left text-sm font-semibold">Serie</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold">IP</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold">MAC</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold">Fecha mantenimiento</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold">Próxima fecha</th>
+        <th class="px-4 py-3 text-center text-sm font-semibold">Limpz. lente</th>
+        <th class="px-4 py-3 text-center text-sm font-semibold">Limpz. interior</th>
+        <th class="px-4 py-3 text-center text-sm font-semibold">Verif. conector</th>
+        <th class="px-4 py-3 text-center text-sm font-semibold">Verif. alimentación</th>
         <th class="px-4 py-3 text-left text-sm font-semibold">Acciones</th>
       </tr>
     </thead>
     <tbody>
-      {% for camara in camaras %}
+      {% for mant in mantenimientos %}
       <tr class="border-b hover:bg-gray-50">
-        <td class="px-4 py-3 text-sm">{{ camara.empresa }}</td>
-        <td class="px-4 py-3 text-sm font-medium">{{ camara.nombre }}</td>
-        <td class="px-4 py-3 text-sm">{{ camara.modelo }}</td>
-        <td class="px-4 py-3 text-sm font-mono">{{ camara.serie }}</td>
-        <td class="px-4 py-3 text-sm font-mono">{{ camara.ip }}</td>
-        <td class="px-4 py-3 text-sm font-mono">{{ camara.mac }}</td>
+        <td class="px-4 py-3 text-sm">{{ mant.camara.empresa }}</td>
+        <td class="px-4 py-3 text-sm font-medium">{{ mant.camara.nombre }}</td>
+        <td class="px-4 py-3 text-sm font-mono">{{ mant.camara.serie }}</td>
+        <td class="px-4 py-3 text-sm">{{ mant.fecha_mantenimiento }}</td>
+        <td class="px-4 py-3 text-sm">{{ mant.proxima_fecha }}</td>
+        <td class="px-4 py-3 text-center text-base">
+          {% if mant.limpieza_lente %}✅{% else %}❌{% endif %}
+        </td>
+        <td class="px-4 py-3 text-center text-base">
+          {% if mant.limpieza_interior %}✅{% else %}❌{% endif %}
+        </td>
+        <td class="px-4 py-3 text-center text-base">
+          {% if mant.verificacion_conector %}✅{% else %}❌{% endif %}
+        </td>
+        <td class="px-4 py-3 text-center text-base">
+          {% if mant.verificacion_alimentacion %}✅{% else %}❌{% endif %}
+        </td>
         <td class="px-4 py-3 text-sm">
           <div class="flex items-center gap-3">
-            <a href="{% url 'editar_camara' camara.pk %}"
+            <a href="{% url 'editar_mantenimiento' mant.pk %}"
                title="Editar"
                class="text-blue-600 hover:text-blue-800 transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
@@ -45,7 +59,7 @@
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </a>
-            <a href="{% url 'eliminar_camara' camara.pk %}"
+            <a href="{% url 'eliminar_mantenimiento' mant.pk %}"
                title="Eliminar"
                class="text-red-500 hover:text-red-700 transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
@@ -65,8 +79,8 @@
 </div>
 {% else %}
 <div class="bg-white shadow rounded-lg p-12 text-center text-gray-500">
-  <p class="text-lg">No hay cámaras registradas aún.</p>
-  <p class="text-sm mt-2">Usa el botón de arriba para registrar la primera.</p>
+  <p class="text-lg">No hay mantenimientos registrados aún.</p>
+  <p class="text-sm mt-2">Usa el botón de arriba para registrar el primero.</p>
 </div>
 {% endif %}
 {% endblock %}

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SistemaCamaras{% endblock %} | SistemaCamaras</title>
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <nav class="bg-gray-800 text-white px-6 py-3 flex justify-between items-center shadow">
+    <div class="flex items-center gap-3">
+      <img src="/media/Isotipo-Color2.png" alt="Logo" class="h-9 object-contain">
+      <span class="font-bold text-lg tracking-wide">SistemaCamaras</span>
+    </div>
+    <div class="flex items-center gap-5">
+      <a href="{% url 'registrar_camara' %}" class="hover:underline text-sm">Registrar Cámara</a>
+      <a href="{% url 'lista_camaras' %}" class="hover:underline text-sm">Lista de Cámaras</a>
+      {% if user.is_authenticated %}
+      <span class="text-gray-400 text-sm">{{ user.username }}</span>
+      <form method="post" action="{% url 'logout' %}" class="inline">
+        {% csrf_token %}
+        <button type="submit" class="text-sm bg-gray-600 hover:bg-gray-500 px-3 py-1 rounded transition">
+          Cerrar sesión
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </nav>
+
+  {% if messages %}
+  <div class="max-w-6xl mx-auto px-4 mt-4 w-full">
+    {% for message in messages %}
+    <div class="p-3 rounded mb-2
+      {% if message.tags == 'success' %}bg-green-100 text-green-800 border border-green-300
+      {% elif message.tags == 'error' %}bg-red-100 text-red-800 border border-red-300
+      {% else %}bg-yellow-100 text-yellow-800 border border-yellow-300{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-gray-800 text-gray-400 text-center py-3 text-sm mt-auto">
+    SistemaCamaras &copy; 2026
+  </footer>
+
+</body>
+</html>
