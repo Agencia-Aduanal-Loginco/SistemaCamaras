@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -17,6 +19,8 @@ class Camara(models.Model):
     serie = models.CharField(max_length=100)
     ip = models.GenericIPAddressField()
     mac = models.CharField(max_length=17)
+
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
