@@ -13,9 +13,26 @@ from .models import Mantenimiento, DestinatarioReporte, proxima_fecha_habil
 
 @login_required
 def lista_mantenimientos(request):
+    empresas = (
+        Mantenimiento.objects
+        .select_related('camara')
+        .values_list('camara__empresa', flat=True)
+        .distinct()
+        .order_by('camara__empresa')
+    )
+    empresa_seleccionada = request.GET.get('empresa', '').strip()
+
     mantenimientos = Mantenimiento.objects.select_related('camara').all()
+    if empresa_seleccionada:
+        mantenimientos = mantenimientos.filter(camara__empresa=empresa_seleccionada)
+
+    total = Mantenimiento.objects.count()
+
     return render(request, 'mantenimientos/lista_mantenimientos.html', {
         'mantenimientos': mantenimientos,
+        'empresas': empresas,
+        'empresa_seleccionada': empresa_seleccionada,
+        'total': total,
     })
 
 
