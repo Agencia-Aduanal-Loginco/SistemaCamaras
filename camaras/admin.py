@@ -65,6 +65,32 @@ def _generar_qr_b64(url: str) -> str:
     return base64.b64encode(buf.getvalue()).decode()
 
 
+@admin.action(description='Generar etiquetas QR redondas (nombre + IP)')
+def generar_etiquetas_qr_redondas(modeladmin, request, queryset):
+    grupos = {}
+    for camara in queryset.order_by('empresa', 'nombre'):
+        url = request.build_absolute_uri(
+            reverse('mantenimiento_rapido', args=[camara.token])
+        )
+        empresa = camara.empresa
+        if empresa not in grupos:
+            grupos[empresa] = []
+        grupos[empresa].append({
+            'camara': camara,
+            'url': url,
+            'qr_b64': _generar_qr_b64(url),
+        })
+
+    return TemplateResponse(
+        request,
+        'admin/camaras/etiquetas_qr_redondas.html',
+        {
+            'grupos': grupos,
+            'opts': modeladmin.model._meta,
+        },
+    )
+
+
 @admin.action(description='Generar etiquetas QR por empresa')
 def generar_etiquetas_qr(modeladmin, request, queryset):
     grupos = {}
@@ -98,4 +124,4 @@ class CamaraAdmin(admin.ModelAdmin):
     list_display = ('empresa', 'nombre', 'modelo', 'serie', 'ip', 'mac')
     list_filter = ('empresa',)
     search_fields = ('empresa', 'nombre', 'serie', 'ip', 'mac')
-    actions = [cambiar_empresa, generar_etiquetas_qr]
+    actions = [cambiar_empresa, generar_etiquetas_qr, generar_etiquetas_qr_redondas]
