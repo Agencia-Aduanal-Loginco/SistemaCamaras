@@ -279,4 +279,9 @@ pyrightconfig.json
 # base de datos
 db.sqlite3
 
+#archivos personales
+.claude
+CLAUDE.md
+
+
 # End of https://www.toptal.com/developers/gitignore/api/linux,python,django
