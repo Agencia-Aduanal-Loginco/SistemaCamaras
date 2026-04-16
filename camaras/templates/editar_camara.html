@@ -3,39 +3,102 @@
 {% block title %}Editar — {{ camara.nombre }}{% endblock %}
 
 {% block content %}
-<div class="max-w-lg mx-auto bg-white p-8 shadow rounded-lg">
-  <h2 class="text-xl font-bold text-gray-800 mb-6">Editar Cámara: {{ camara.nombre }}</h2>
+<div class="max-w-xl mx-auto">
 
-  <form method="post" action="{% url 'editar_camara' camara.pk %}">
-    {% csrf_token %}
+  <!-- Breadcrumb -->
+  <nav aria-label="Ruta de navegación" class="mb-4">
+    <ol class="flex items-center gap-1.5 text-sm text-slate-500">
+      <li><a href="{% url 'lista_camaras' %}" class="hover:text-blue-600 transition-colors">Cámaras</a></li>
+      <li aria-hidden="true"><span class="text-slate-300">/</span></li>
+      <li class="text-slate-800 font-medium truncate" aria-current="page">{{ camara.nombre }}</li>
+    </ol>
+  </nav>
 
-    {% for field in form %}
-    <div class="mb-4">
-      <label for="{{ field.id_for_label }}"
-             class="block text-sm font-medium text-gray-700 mb-1">
-        {{ field.label }}
-      </label>
-      <input type="{{ field.field.widget.input_type }}"
-             name="{{ field.html_name }}"
-             id="{{ field.id_for_label }}"
-             value="{{ field.value|default:'' }}"
-             class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500
-             {% if field.errors %}border-red-400{% endif %}">
-      {% for error in field.errors %}
-      <p class="text-red-600 text-sm mt-1">{{ error }}</p>
-      {% endfor %}
+  <div class="bg-white rounded-xl shadow-card border border-slate-100 p-6 sm:p-8">
+    <div class="mb-6">
+      <h1 class="text-xl font-bold text-slate-900">Editar Cámara</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        Modificando <strong class="text-slate-700">{{ camara.nombre }}</strong> ·
+        Los campos marcados con <span class="text-red-500 font-medium">*</span> son obligatorios.
+      </p>
     </div>
-    {% endfor %}
 
-    <div class="flex items-center gap-4 mt-6">
-      <button type="submit"
-              class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-        Actualizar
-      </button>
-      <a href="{% url 'lista_camaras' %}" class="text-gray-500 hover:underline text-sm">
-        Cancelar
-      </a>
-    </div>
-  </form>
+    <form method="post" action="{% url 'editar_camara' camara.pk %}" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div role="alert" class="mb-5 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="space-y-5">
+        {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}"
+                 class="block text-sm font-medium text-slate-700 mb-1.5">
+            {{ field.label }}
+            {% if field.field.required %}
+            <span class="text-red-500 ml-0.5" aria-hidden="true">*</span>
+            {% endif %}
+          </label>
+          <input type="{{ field.field.widget.input_type }}"
+                 name="{{ field.html_name }}"
+                 id="{{ field.id_for_label }}"
+                 value="{{ field.value|default:'' }}"
+                 {% if field.field.required %}required aria-required="true"{% endif %}
+                 {% if field.errors %}aria-invalid="true" aria-describedby="error-{{ field.html_name }}"{% endif %}
+                 class="w-full h-11 px-3 rounded-lg border text-sm text-slate-800 transition-colors duration-150
+                        placeholder:text-slate-400
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                        {% if field.errors %}
+                          border-red-400 bg-red-50/30
+                        {% else %}
+                          border-slate-200 bg-white hover:border-slate-300
+                        {% endif %}">
+          {% if field.help_text %}
+          <p class="mt-1 text-xs text-slate-500">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+          <div id="error-{{ field.html_name }}" role="alert" class="mt-1.5 flex items-start gap-1.5">
+            <svg class="h-3.5 w-3.5 text-red-500 shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+            </svg>
+            <div class="space-y-0.5">
+              {% for error in field.errors %}
+              <p class="text-xs text-red-600">{{ error }}</p>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="flex items-center gap-3 mt-8 pt-6 border-t border-slate-100">
+        <button type="submit"
+                class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2
+                       bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm
+                       h-11 px-6 rounded-lg shadow-card transition-colors duration-150
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                       cursor-pointer">
+          <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+          </svg>
+          Guardar cambios
+        </button>
+        <a href="{% url 'lista_camaras' %}"
+           class="flex-1 sm:flex-none inline-flex items-center justify-center
+                  h-11 px-5 rounded-lg text-sm font-medium text-slate-600
+                  border border-slate-200 hover:bg-slate-50 hover:border-slate-300
+                  transition-colors duration-150 focus:outline-none focus:ring-2
+                  focus:ring-slate-400 focus:ring-offset-2">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}
